@@ -8,11 +8,11 @@
         <version>2.6.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.studyolle</groupId>
-    <artifactId>studyolle</artifactId>
+    <groupId>com.webProject</groupId>
+    <artifactId>webProject</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>studyolle</name>
-    <description>studyolle</description>
+    <name>webProject</name>
+    <description>webProject</description>
     <properties>
         <java.version>11</java.version>
     </properties>
