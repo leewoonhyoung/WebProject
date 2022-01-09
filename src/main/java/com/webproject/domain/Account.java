@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter@Setter@EqualsAndHashCode(of = "id") // 무한 루프 제거
@@ -45,6 +46,10 @@ public class Account {
     private boolean studyEnrollmentResultByWeb;
 
     private boolean studyUpdateByWeb;
+
+    public void generateEmailCheckToken() {
+        this.emailCheckToken = UUID.randomUUID().toString();
+    }
 }
 
 

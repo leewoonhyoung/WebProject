@@ -1,6 +1,9 @@
 package com.webproject.account;
 
+import com.webproject.domain.Account;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -17,12 +20,16 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class AccountController {
 
+    private final SignUpFormValidator signUpFormValidator;
+    private final AccountService accountService;
+
+
     @InitBinder("signUpForm")
     public void initBinder(WebDataBinder webDataBinder){
         webDataBinder.addValidators(signUpFormValidator);
     }
 
-    private final SignUpFormValidator signUpFormValidator;
+
 
     @GetMapping("/sign-up")
     public String signUpForm(Model model){
@@ -40,11 +47,15 @@ public class AccountController {
 //        if (errors.hasErrors()){
 //            return "account/sign-up";
 //        }
+        accountService.processNewAccount(signUpForm);
 
         //TDDO 회원 가입 처리
+
         return "redirect:/";
 
 
     }// @ModelAttribute 를 사용하여 복합 객체를 가져온다. 닉네임 이메일 패스워드
+
+
 
 }

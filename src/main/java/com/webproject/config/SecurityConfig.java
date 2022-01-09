@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-@Configuration
+@Configuration // singleton 보장, 스프링 컨테이너에서 bean을 관리할수 있게 해준다.
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
