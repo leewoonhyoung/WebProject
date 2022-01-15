@@ -2,8 +2,6 @@ package com.webproject.account;
 
 import com.webproject.domain.Account;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -14,7 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
+
 
 
 @Controller
@@ -38,27 +36,25 @@ public class AccountController {
         return "account/sign-up";
     }
 
-    @PostMapping("/sign-up")
+    @PostMapping("/sign-up")// @ModelAttribute 를 사용하여 복합 객체를 가져온다. 닉네임 이메일 패스워드
     public String signUpSubmit(@Valid @ModelAttribute SignUpForm signUpForm, Errors errors) {
         if (errors.hasErrors()) {
             return "account/sign-up";
         }
 
+        Account account = accountService.processNewAccount(signUpForm);
+        accountService.login(account);
+        return "redirect:/";
+
 //        signUpFormValidator.validate(signUpForm,errors);
 //        if (errors.hasErrors()){
 //            return "account/sign-up";
 //        }
-        accountService.processNewAccount(signUpForm);
 
-        //TDDO 회원 가입 처리
-
-        return "redirect:/";
-
-
-    }// @ModelAttribute 를 사용하여 복합 객체를 가져온다. 닉네임 이메일 패스워드
+    }
 
     @GetMapping("/check-email-token")
-    public String checkEmailtoken(String token, String email, Model model) {
+    public String checkEmailToken(String token, String email, Model model) {
         Account account = accountRepository.findByEmail(email);
         String view = "account/checked-email";
 
@@ -66,13 +62,16 @@ public class AccountController {
             model.addAttribute("error", "wrong.email");
             return view;
         }
-        if (!account.getEmailCheckToken().equals(token)) {
+        if (!account.isValidToken(token)){
             model.addAttribute("error", "wrong.token");
             return view;
-
         }
-        account.setEmailVerified(true);
-        account.setJoinedAt(LocalDateTime.now());
+// 위에 코드는 아래 코드를 refactoring 한 코드입니다.
+//        if (!account.getEmailCheckToken().equals(token)) {
+//            model.addAttribute("error", "wrong.token");
+//            return view;
+//        }
+        account.completeSignUp();
         model.addAttribute("numberOfUser", accountRepository.count());
         model.addAttribute("nickname", account.getNickname());
         return view;
